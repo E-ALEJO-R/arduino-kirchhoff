@@ -142,6 +142,13 @@ float getVoltage(float value) {
 
 /**
  * Función para resolver sistema de ecuaciones lineales mediante el método de gauss-jordan.
+ *  ┌───────┬────┬────┬────┐              ┌───┬───┬───┬───┐
+ *  │ 27011 │ 11 │ 0  │ 12 │              │ 1 │ 0 │ 0 │ a │
+ *  ├───────┼────┼────┼────┤              ├───┼───┼───┼───┤
+ *  │  11   │ 38 │ 0  │ 5  │      ->      │ 0 │ 1 │ 0 │ b │
+ *  ├───────┼────┼────┼────┤              ├───┼───┼───┼───┤
+ *  │  1    │ 1  │ -1 │ 0  │              │ 0 │ 0 │ 1 │ c │
+ *  └───────┴────┴────┴────┘              └───┴───┴───┴───┘
  * @param rows filas de la matriz.
  * @param columns columnas de la matriz.
  * @param pivote diagonal principal.
