@@ -1,6 +1,7 @@
 /**
  * PROYECTO "LEY DE KIRCHHOFF"
  * Fecha: 30/11/2022
+ * Descripción: desarrollado con el framework arduino RTOS.
  */
 
 #include <Arduino.h>
