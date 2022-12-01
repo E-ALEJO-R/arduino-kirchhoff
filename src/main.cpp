@@ -1,3 +1,8 @@
+/**
+ * PROYECTO "LEY DE KIRCHHOFF"
+ * Fecha: 30/11/2022
+ */
+
 #include <Arduino.h>
 #include "../dependencies/uno/FreeRTOS/src/Arduino_FreeRTOS.h"
 #include "../dependencies/uno/FreeRTOS/src/semphr.h"
@@ -27,7 +32,6 @@ void print(String prefix, float value, String postfix);
 
 float getVoltage(float value);
 
-// void gaussJordan(int rows, int columns, float pivote, float aux, float matrix[3][4]);
 void gaussJordan(int rows, int columns, float pivote, float aux, float matrix[3][4]);
 
 
@@ -43,7 +47,10 @@ void setup() {
 void loop() {
 }
 
-// para una fuente de 12 voltios.
+/**
+ * Tarea para leer el valor de voltage de la fuente variable de 12[V].
+ * @param pvParameters
+ */
 void readV1(void *pvParameters) {
     float voltage;
     int value;
@@ -57,7 +64,10 @@ void readV1(void *pvParameters) {
     }
 }
 
-// para una fuente de 5 voltios.
+/**
+ * Tarea para leer el valor de voltaje de la fuente de 5[v]
+ * @param pvParameters
+ */
 void readV2(void *pvParameters) {
     float voltage;
     int value;
@@ -71,7 +81,10 @@ void readV2(void *pvParameters) {
     }
 }
 
-// para calcular las corrientes.
+/**
+ * Tarea para calcular las corrientes I1, I2 e I3.
+ * @param pvParameters
+ */
 void readI(void *pvParameters) {
     int rows = 3, columns = 4;
     float aux = 0, pivote = 0;
@@ -86,7 +99,10 @@ void readI(void *pvParameters) {
     }
 }
 
-// para mostrar los datos.
+/**
+ * Tarea para mostrar los valores calculados mediante la ley de kirchhoff.
+ * @param pvParameters
+ */
 void show(void *pvParameters) {
     while (true) {
         print("V1: ", *V1, "[V]");
@@ -99,6 +115,12 @@ void show(void *pvParameters) {
     }
 }
 
+/**
+ * Función para mostrar datos a través del monitor serial.
+ * @param prefix descripción.
+ * @param value valor a mostrar.
+ * @param postfix unidad de medida.
+ */
 void print(String prefix, float value, String postfix) {
     xSemaphoreTake(mutex, portMAX_DELAY);
     Serial.print(prefix);
@@ -107,11 +129,24 @@ void print(String prefix, float value, String postfix) {
     xSemaphoreGive(mutex);
 }
 
+/**
+ * Función para calcular el voltaje de entrada.
+ * @param value valor obtenido desde el pin adc del arduino.
+ * @return voltage calculado.
+ */
 float getVoltage(float value) {
     double a = map(value, 0, 1023, 0, 25000) / 1000.0;
     return a - 0.20;
 }
 
+/**
+ * Función para resolver sistema de ecuaciones lineales mediante el método de gauss-jordan.
+ * @param rows filas de la matriz.
+ * @param columns columnas de la matriz.
+ * @param pivote diagonal principal.
+ * @param aux tmp.
+ * @param matrix matriz.
+ */
 void gaussJordan(int rows, int columns, float pivote, float aux, float matrix[3][4]) {
     // reducción por reglones
     for (short int i = 0; i < rows; i++) {
