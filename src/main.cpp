@@ -108,7 +108,6 @@ void show(void *pvParameters) {
     while (true) {
         print("V1: ", *V1, "[V]");
         print("V2: ", *V2, "[V]");
-
         print("I1: ", *I1, "[A]");
         print("I2: ", *I2, "[A]");
         print("I3: ", *I3, "[A]");
