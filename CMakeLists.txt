@@ -31,3 +31,8 @@ add_custom_target(
 )
 
 add_executable(Z_DUMMY_TARGET ${SRC_LIST})
+
+include_directories("${CMAKE_CURRENT_LIST_DIR}/lib/semaphore")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/lib/task")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/lib/matrix")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/dependencies/uno/FreeRTOS/src")

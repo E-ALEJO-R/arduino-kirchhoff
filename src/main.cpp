@@ -9,6 +9,7 @@
 #include "semphr.h"
 #include "Task.h"
 #include "main.h"
+#include "Semaphore.h"
 
 /**
  * A continuación vamos a mostrara el código con el que fue posible realizar este experimento.
