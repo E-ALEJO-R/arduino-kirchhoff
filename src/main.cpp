@@ -5,34 +5,56 @@
  */
 
 #include <Arduino.h>
-#include "../dependencies/uno/FreeRTOS/src/Arduino_FreeRTOS.h"
-#include "../dependencies/uno/FreeRTOS/src/semphr.h"
+#include "Arduino_FreeRTOS.h"
+#include "semphr.h"
+#include "Task.h"
+#include "main.h"
 
-float *V1 = new float(0.0);
-float *V2 = new float(0.0);
+/**
+ * A continuación vamos a mostrara el código con el que fue posible realizar este experimento.
+ */
 
+// primero declaramos dos variables de tipo float que almacena valores leídos desde el pin
+// ADC del arduino.
+float *V1 = new float;
+float *V2 = new float;
+
+
+// estas son valores de la resistencia.
 float R1 = 27000;
 float R2 = 11;
 float R3 = 27;
 
-float *I1 = new float(0.0);
-float *I2 = new float(0.0);
-float *I3 = new float(0.0);
+// variables para almacenar las corrientes calculados.
+float *I1 = new float;
+float *I2 = new float;
+float *I3 = new float;
 
+// para poder leer los valores simultaneamente se utilizo la libreria FreeRTOS, que es un sistema en tiempo real.
+// que imprime los 5 valore atraves del monitor serial.
 SemaphoreHandle_t mutex = nullptr;
 
+
+// funcion para leer valores de la vuente de 12 voltios.
 void readV1(void *pvParameters);
 
+// funcion para leer valores de la fuente de 5 voltios.
 void readV2(void *pvParameters);
 
+// función para procesar los datos leidos..
 void readI(void *pvParameters);
 
+
+// función para mostrar valores procesados a traves de monitor serial.
 void show(void *pvParameters);
 
+// función que para imprimir valores.
 void print(String prefix, float value, String postfix);
 
+// función para leer el voltage.
 float getVoltage(float value);
 
+// función para resolver sistema de ecuaciones por el metodo de gauss jordan.
 void gaussJordan(int rows, int columns, float pivote, float aux, float matrix[3][4]);
 
 
@@ -50,6 +72,8 @@ void loop() {
 
 /**
  * Tarea para leer el valor de voltage de la fuente variable de 12[V].
+ * Esta función obtiene los valores desde el pin ADC del arduino, para la fuente
+ * regulable de 12 voltios.
  * @param pvParameters
  */
 void readV1(void *pvParameters) {
@@ -141,13 +165,13 @@ float getVoltage(float value) {
 
 /**
  * Función para resolver sistema de ecuaciones lineales mediante el método de gauss-jordan.
- *  ┌───────┬────┬────┬────┐              ┌───┬───┬───┬───┐
- *  │ 27011 │ 11 │ 0  │ 12 │              │ 1 │ 0 │ 0 │ a │
- *  ├───────┼────┼────┼────┤              ├───┼───┼───┼───┤
- *  │  11   │ 38 │ 0  │ 5  │      ->      │ 0 │ 1 │ 0 │ b │
- *  ├───────┼────┼────┼────┤              ├───┼───┼───┼───┤
- *  │  1    │ 1  │ -1 │ 0  │              │ 0 │ 0 │ 1 │ c │
- *  └───────┴────┴────┴────┘              └───┴───┴───┴───┘
+ *  ┌───────┬────┬────┬────┐              ┌───┬───┬───┬───┐ <br>
+ *  │ 27011 │ 11 │ 0  │ 12 │              │ 1 │ 0 │ 0 │ a │ <br>
+ *  ├───────┼────┼────┼────┤              ├───┼───┼───┼───┤ <br>
+ *  │  11   │ 38 │ 0  │ 5  │      ->      │ 0 │ 1 │ 0 │ b │ <br>
+ *  ├───────┼────┼────┼────┤              ├───┼───┼───┼───┤ <br>
+ *  │  1    │ 1  │ -1 │ 0  │              │ 0 │ 0 │ 1 │ c │ <br>
+ *  └───────┴────┴────┴────┘              └───┴───┴───┴───┘ <br>
  * @param rows filas de la matriz.
  * @param columns columnas de la matriz.
  * @param pivote diagonal principal.

@@ -1,38 +1,35 @@
 //
-// Created by edgar on 01-12-22.
+// Created by edgar on 07-07-23.
 //
 
 #ifndef ARDUINO_KIRCHHOFF_MATRIX_H
 #define ARDUINO_KIRCHHOFF_MATRIX_H
 
-template <typename T>
-class Matrix{
+template<typename T>
+class Matrix {
     private:
         T **array;
-        T **identity;
         const unsigned int rows;
         const unsigned int columns;
 
     public:
-        Matrix(const unsigned int rows, const unsigned int columns) {
-            this->array = new T *[rows];
+        Matrix(const unsigned int rows, const unsigned int columns) : rows(rows), columns(columns) {
+            array = new T *[rows];
             for (short int i = 0; i < rows; ++i)
-                this->array[i] = new T[columns];
-            this->rows = rows;
-            this->columns = columns;
+                array[i] = new T[columns];
         }
 
-        virtual ~Matrix() {
-            for (int i = 0; i < rows; ++i)
+        ~Matrix() {
+            for (short int i = 0; i < rows; ++i)
                 delete[] array[i];
             delete[] array;
         }
 
         void set(short int row, short int column, T *value) {
-            for (int i = 0; i < rows; ++i) {
-                for (int j = 0; j < columns; ++j) {
+            for (short int i = 0; i < rows; ++i) {
+                for (short int j = 0; j < columns; ++j) {
                     if (row == i && column == j) {
-                        array[i][j] = &value;
+                        array[i][j] = *value;
                         break;
                     }
                 }
@@ -40,8 +37,8 @@ class Matrix{
         }
 
         T get(short int row, short int column) {
-            for (int i = 0; i < rows; ++i) {
-                for (int j = 0; j < columns; ++j) {
+            for (short int i = 0; i < rows; ++i) {
+                for (short int j = 0; j < columns; ++j) {
                     if (row == i && column == j) {
                         return array[i][j];
                     }
@@ -50,7 +47,8 @@ class Matrix{
         }
 
         void solve() {
-            T pivote, aux;
+            T **identity;
+            T pivote, tmp;
             // reducción por reglones
             for (short int i = 0; i < rows; i++) {
                 pivote = array[i][i];
@@ -60,9 +58,9 @@ class Matrix{
                 }
                 for (short int j = 0; j < rows; j++) {
                     if (i != j) { // si no es la diagonal.
-                        aux = array[j][i];
+                        tmp = array[j][i];
                         for (short int k = 0; k < columns; k++) { // convertir a cero toda la columna del pivote.
-                            array[j][k] = array[j][k] - aux * array[i][k];
+                            array[j][k] = array[j][k] - tmp * array[i][k];
                         }
                     }
                 }
